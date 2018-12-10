@@ -1,0 +1,18 @@
+<head>
+
+</head>
+<body>
+<%= form_tag("/result") do %>
+  <p><input type="text" name="cards" id="cards" value="<%= @cards %>">
+
+  </p>
+  <p><input type="submit" name="commit" value="Check" id="check"></p></form>
+<% end %>
+</div>
+<div id="hand"><p><%= @result %></p></div>
+<div id="error"><p><%= @error %></p></div>
+</div>
+
+
+</body>
+
