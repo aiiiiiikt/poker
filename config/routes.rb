@@ -56,7 +56,7 @@ Rails.application.routes.draw do
   #
   post "/result" => "home#result"
   get "/" => "home#top"
-  post "/" => "home#top"
+  # post "/" => "home#top"
   mount API::Root => "/"
 
 

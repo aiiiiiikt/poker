@@ -2,15 +2,15 @@ class Hand
   def initialize(card)
     @cards = card
   end
-
   def cardList
     @cardList
   end
 
   def result
-
     #半角スペースで区切って取り出す
+
     @cardList = @cards.split
+
 
     #英語と数字に分けて英語を認識する
     @suits = @cardList.map {|x| x.split(//, 2)}.map(&:first).sort
@@ -32,10 +32,10 @@ class Hand
       @marks = @suits.uniq
       if @marks.count == 1
 
-        @result = { role: "ストレートフラッシュ", score: 8 }
+        @result = { result: "ストレートフラッシュ", score: 8 }
         # マークが全て同じではない
       else
-        @result = { role: "ストレート", score: 4 }
+        @result = { result: "ストレート", score: 4 }
 
       end
 
@@ -72,7 +72,62 @@ class Hand
 
     end
 
-    #render("home/top")
-    return @result
+  end
+
+
+  def error
+    errorhash = {}
+
+
+    #半角スペースで区切って取り出す
+    @cardList = @cards.split
+    #   カードが重複している場合
+    @Duplication = @cardList.uniq.size
+
+
+    if @Duplication != 5
+      @error = "カードが重複しています"
+    end
+
+    # 半角大文字英数以外が使われている場合
+
+    index = 1
+
+    if !(@cards =~ /[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\z/)
+      @error = "半角大文字英語のスート(H,D,S,C)と数字（1~13)で記入してください"
+
+
+      @cardList.each do |card|
+        if !(card =~ /[SHCD]([1-9]|1[0-3])\z/)
+          @errornumber = index
+          @error2      = "#{@errornumber}番目のカードの指定文字が不正です(#{(card)})"
+        end
+        index += 1
+
+
+      end
+
+
+    end
+
+
+    # 2つの塊が5つ以外で構成されている場合
+    if @cardList.count != 5
+
+      @error = "5つのカード指定文字を半角スペースで区切り入力してください（例）H3 S3 D4 D12 S1"
+
+    end
+
+
+      @error = "カードを入力してください"   if @cards.blank?
+
+    errorhash["error"] = @error  if @error.present?
+
+      errorhash["error2"] = @error2 if @error2.present?
+
+
+    @lasterror = errorhash
+
+
   end
 end

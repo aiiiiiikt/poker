@@ -2,7 +2,6 @@ module API
   module Ver1
     class Poker < Grape::API
       resource :poker do
-
         # GET /api/ver1/poker
         desc 'ポーカーの役を返す'
         # prefix 'poker/'
@@ -12,80 +11,61 @@ module API
           #   入力したデータを受け取る
           @cards = params[:cards]
 
+          array2 = []
+          # エラーの場合はエラーを表示。
+          @cards.each do |card|
+
+            @error = Hand.new(card).error
+            if @error.present?
+              @resultall = @error
+              # エラーでない場合は結果を表示
+            else
+              @resultall = Hand.new(card).result
+            end
+            @resultall["cards"] = card
+            array2 << @resultall
+          end
+
+
           array1 = []
 
+          #結果の中からスコアだけを取り出す
+          array2.each do |card|
+            unless card["error"].present?
+              @cardnumber = card["cards"]
 
-          @cards.each do |card|
-            @results = Hand.new(card).result[:score]
-
-
-            array1 << @results
-
-          end
-          @max = array1.max
-
-
-          #   # poker.rb？でもう一つベストのハッシュを作る
-          #
-          #
-          #   # @resultとかで全部出す
-          array = []
-
-          @cards.each do |card|
-
-            @resultall = Hand.new(card).result
-
-            array << @resultall
-
-
-          end
-
-          @scoree = array.each do |score|
-
-
-            if score[:score] == @max
-
-
-              score["best"] = "true"
-
-            else
-              score["best"] = "false"
-
+              @results = Hand.new(@cardnumber).result[:score]
+              array1 << @result
             end
+            #スコアが最高のものを出す
+
+            @scoree = array2.each do |card|
+              unless card["error"].present?
+                @max = array1.max
+                # スコアが最高のものにtrueをつける
+
+                if card[:score] == @max
+                  card["best"] = true
+                else
+                  card["best"] = false
+                end
+              end
+            end
+            hash    = { "result" => array2 }
+
+            return hash
 
           end
-
-          hash={"result"=>array}
-
-          return hash
-
-
-
-
-
-
-
-          # maxを取り出す
-
-
-          # マックスの数字に合うスコアのものをfindbyで取り出し、trueがつくようにする
-
-          # array.each do |a|
-          #
-          #
-          # end
-
-
-
-
-          # データを加工して、homecontrollerが受け取れる形にする
-          # コントローラに渡して、役をつける
-          # 強さを判定する
-          # 役とその強さを返す
-
         end
       end
     end
   end
 end
+
+
+
+
+
+
+
 
