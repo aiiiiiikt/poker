@@ -1,11 +1,11 @@
 module API
   module Ver1
     class Poker < Grape::API
+      format :json
       resource :poker do
         # GET /api/ver1/poker
         desc 'ポーカーの役を返す'
         # prefix 'poker/'
-
         post do
 
           #   入力したデータを受け取る
@@ -30,20 +30,21 @@ module API
           array1 = []
 
           #結果の中からスコアだけを取り出す
+
           array2.each do |card|
             unless card["error"].present?
-              @cardnumber = card["cards"]
+            @cardnumber = card["cards"]
+            @results = Hand.new(@cardnumber).result[:score]
+              array1 << @results
 
-              @results = Hand.new(@cardnumber).result[:score]
-              array1 << @result
             end
-            #スコアが最高のものを出す
+            end
+            #スコアが最高のものを出
 
+            @max = array1.max
             @scoree = array2.each do |card|
               unless card["error"].present?
-                @max = array1.max
                 # スコアが最高のものにtrueをつける
-
                 if card[:score] == @max
                   card["best"] = true
                 else
@@ -51,16 +52,18 @@ module API
                 end
               end
             end
-            hash    = { "result" => array2 }
 
+           hash= { "result" => array2 }
             return hash
+
+            # present hash ,with Entities::V1::Poker
+
 
           end
         end
       end
     end
   end
-end
 
 
 
