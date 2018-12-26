@@ -2,6 +2,7 @@ class Hand
   def initialize(card)
     @cards = card
   end
+
   def cardList
     @cardList
   end
@@ -63,15 +64,13 @@ class Hand
       end
     elsif @kazu.count == 4
       @result = { result: "ワンペア", score: 1 }
-    elsif @marks = @suits.uniq
+    elsif @marks == @suits.uniq
       if @marks.count == 1
         @result = { result: "フラッシュ", score: 5 }
       else
         @result = { result: "ハイカード", score: 0 }
       end
-
     end
-
   end
 
 
@@ -84,46 +83,44 @@ class Hand
     #   カードが重複している場合
     @Duplication = @cardList.uniq.size
 
-
     if @Duplication != 5
-      @error = "カードが重複しています"
+      @error1 = "カードが重複しています"
     end
 
     # 半角大文字英数以外が使われている場合
-
     index = 1
 
     if !(@cards =~ /[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\z/)
-      @error = "半角大文字英語のスート(H,D,S,C)と数字（1~13)で記入してください"
+      @error2 = "半角大文字英語のスート(H,D,S,C)と数字（1~13)で記入してください"
 
-
+      @errornumber=[]
+      @errorcard=[]
       @cardList.each do |card|
         if !(card =~ /[SHCD]([1-9]|1[0-3])\z/)
-          @errornumber = index
-          @error2      = "#{@errornumber}番目のカードの指定文字が不正です(#{(card)})"
+          @errornumber << index
+          @errorcard<<card
         end
         index += 1
 
-
       end
-
-
+      @error3      = "#{@errornumber}番目のカードの指定文字が不正です(#{@errorcard})"
     end
 
 
     # 2つの塊が5つ以外で構成されている場合
     if @cardList.count != 5
 
-      @error = "5つのカード指定文字を半角スペースで区切り入力してください（例）H3 S3 D4 D12 S1"
-
+      @error4 = "5つのカード指定文字を半角スペースで区切り入力してください（例）H3 S3 D4 D12 S1"
     end
 
+    @error5             = "カードを入力してください" if @cards.blank?
 
-      @error = "カードを入力してください"   if @cards.blank?
 
-    errorhash["error"] = @error  if @error.present?
-
-      errorhash["error2"] = @error2 if @error2.present?
+    errorhash["error"]  = @error1 if @error1.present?
+    errorhash["error2"] = @error2 if @error2.present?
+    errorhash["error3"] = @error3 if @error3.present?
+    errorhash["error4"] = @error4 if @error4.present?
+    errorhash["error5"] = @error5 if @error5.present?
 
 
     @lasterror = errorhash

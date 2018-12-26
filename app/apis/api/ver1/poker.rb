@@ -25,45 +25,37 @@ module API
             @resultall["cards"] = card
             array2 << @resultall
           end
-
-
           array1 = []
-
           #結果の中からスコアだけを取り出す
 
           array2.each do |card|
             unless card["error"].present?
-            @cardnumber = card["cards"]
-            @results = Hand.new(@cardnumber).result[:score]
+              @cardnumber = card["cards"]
+              @results    = Hand.new(@cardnumber).result[:score]
               array1 << @results
-
             end
-            end
-            #スコアが最高のものを出
-
-            @max = array1.max
-            @scoree = array2.each do |card|
-              unless card["error"].present?
-                # スコアが最高のものにtrueをつける
-                if card[:score] == @max
-                  card["best"] = true
-                else
-                  card["best"] = false
-                end
+          end
+          #スコアが最高のものを出す
+          @max    = array1.max
+          @scoree = array2.each do |card|
+            unless card["error"].present?
+              # スコアが最高のものにtrueをつける
+              if card[:score] == @max
+                card["best"] = true
+              else
+                card["best"] = false
               end
             end
-
-           hash= { "result" => array2 }
-            return hash
-
-            # present hash ,with Entities::V1::Poker
-
-
           end
+
+          hash = { "result" => array2 }
+          return hash
+
         end
       end
     end
   end
+end
 
 
 

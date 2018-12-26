@@ -1,7 +1,4 @@
 class HomeController < ApplicationController
-  # def initialize(card)
-  #   @cards = card
-  # end
 
   def top
 
@@ -12,7 +9,7 @@ class HomeController < ApplicationController
     error
     render("home/top") and return if @put_error.present?
     @outcome = Hand.new(@cards).result
-    @result = @outcome[:result]
+    @result  = @outcome[:result]
 
 
     render("home/top")
@@ -21,14 +18,10 @@ class HomeController < ApplicationController
   end
 
   def error
-    p '@cards'
-    p @cards
     @card_error = Hand.new(@cards).error
 
-    @lasterror = @card_error.values
-    @put_error = @lasterror.join(", ")
-
-
+    @lasterrors = @card_error.values
+    @put_error = @lasterrors.join(", ")
   end
 end
 
