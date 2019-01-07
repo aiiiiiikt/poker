@@ -3,22 +3,19 @@ class Hand
     @cards = card
   end
 
-  def cardList
-    @cardList
-  end
-
   def result
     #半角スペースで区切って取り出す
 
-    @cardList = @cards.split
+    @cardlist = @cards.split
 
 
     #英語と数字に分けて英語を認識する
-    @suits = @cardList.map {|x| x.split(//, 2)}.map(&:first).sort
+    @suits = @cardlist.map {|x| x.split(//, 2)}.map(&:first).sort
     #英語と数字に分けて、数字を認識する
-    @numbers = @cardList.map {|x| x.split(//, 2)}.map(&:last).map(&:to_i).sort
+    @numbers = @cardlist.map {|x| x.split(//, 2)}.map(&:last).map(&:to_i).sort
 
     @kazu = @numbers.uniq
+    @marks = @suits.uniq
 
     #小さい順に数字に名付ける
     v1 = @numbers[0]
@@ -30,7 +27,7 @@ class Hand
     # 数字が5つ連続している
     if (v5 - v4) == 1 && (v4 - v3) == 1 && (v3 - v2) == 1 && (v2 - v1) == 1
       # マークが全て同じ
-      @marks = @suits.uniq
+
       if @marks.count == 1
 
         @result = { result: "ストレートフラッシュ", score: 8 }
@@ -64,67 +61,60 @@ class Hand
       end
     elsif @kazu.count == 4
       @result = { result: "ワンペア", score: 1 }
-    elsif @marks == @suits.uniq
-      if @marks.count == 1
+    elsif @marks.count==1
         @result = { result: "フラッシュ", score: 5 }
       else
         @result = { result: "ハイカード", score: 0 }
-      end
     end
+    return @result
+    end
+
+  def validation_empty_card
+    validation_empty = "カードを入力してください" if @cards.blank?
+    return validation_empty
   end
 
-
-  def error
-    errorhash = {}
-
-
-    #半角スペースで区切って取り出す
-    @cardList = @cards.split
-    #   カードが重複している場合
-    @Duplication = @cardList.uniq.size
-
-    if @Duplication != 5
-      @error1 = "カードが重複しています"
+  def number_of_cards
+    @cardlist = @cards.split
+    number_of_cards_message="5つのカード指定文字を半角スペースで区切り入力してください（例）H3 S3 D4 D12 S1"  if @cardlist.count != 5
+    return number_of_cards_message
     end
 
+
+  def validation
+    @validations_array = []
+    #半角スペースで区切って取り出す
+    @cardlist = @cards.split
+    #   カードが重複している場合
+    duplication = @cardlist.uniq.size
+    if duplication != 5
+      validation_duplication="カードが重複しています"
+      @validations_array<< validation_duplication
+    end
     # 半角大文字英数以外が使われている場合
     index = 1
-
     if !(@cards =~ /[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\s[SHCD]([1-9]|1[0-3])\z/)
-      @error2 = "半角大文字英語のスート(H,D,S,C)と数字（1~13)で記入してください"
-
-      @errornumber=[]
-      @errorcard=[]
-      @cardList.each do |card|
+      errornumber = []
+      errorcard   = []
+      @cardlist.each do |card|
         if !(card =~ /[SHCD]([1-9]|1[0-3])\z/)
-          @errornumber << index
-          @errorcard<<card
+          errornumber << index
+          errorcard << card
+
         end
         index += 1
 
       end
-      @error3      = "#{@errornumber}番目のカードの指定文字が不正です(#{@errorcard})"
+      numbers=errornumber.join(",")
+      cards=errorcard.join(",")
+
+
+      validation_card="半角大文字英語のスート(H,D,S,C)と数字（1~13)で記入してください。#{numbers}番目のカードの指定文字が不正です(#{cards})"
+      @validations_array << validation_card
     end
-
-
-    # 2つの塊が5つ以外で構成されている場合
-    if @cardList.count != 5
-
-      @error4 = "5つのカード指定文字を半角スペースで区切り入力してください（例）H3 S3 D4 D12 S1"
-    end
-
-    @error5             = "カードを入力してください" if @cards.blank?
-
-
-    errorhash["error"]  = @error1 if @error1.present?
-    errorhash["error2"] = @error2 if @error2.present?
-    errorhash["error3"] = @error3 if @error3.present?
-    errorhash["error4"] = @error4 if @error4.present?
-    errorhash["error5"] = @error5 if @error5.present?
-
-
-    @lasterror = errorhash
-
+    # @validation_message=@validations_array.join(",")
+     @validations_array
 
   end
 end
+

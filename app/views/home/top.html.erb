@@ -1,20 +1,25 @@
 <head>
 
 </head>
-<body>
+
 <%= form_tag("/result") do %>
   <p><input type="text" name="cards" id="cards" value="<%= @cards %>">
 
   </p>
   <p><input type="submit" name="commit" value="Check" id="check"></p></form>
-<% end %>
+
 </div>
 
 <div id="hand"><p><%=  @result %></p></div>
-<div id="error"><p><%= @put_error %></p></div>
-<!--<div id="error2"><p><%#= @error2 %></p></div>-->
-</div>
+  <%= @validations_result %>
+<!--    <div><%#= validation %></div>-->
+  <%# end %>
+
+<div id="validation_empty"><%= @validation_empty %></div>
+  <div id="validation_number_of_cards"><%= @validation_number_of_cards %></div>
+
+<% end %>
 
 
-</body>
+
 

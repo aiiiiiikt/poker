@@ -44,22 +44,20 @@ RSpec.describe Hand, :type => :model do
   context "error method" do
     it "result_error" do
       hand = Hand.new("H10 H10 D1 S2 H5")
-      expect(hand.error).to eq("error"=>"カードが重複しています")
+      expect(hand.validation).to eq("カードが重複しています")
     end
 
     it "result_error" do
-      hand = Hand.new("H10 H10 D1 S2 H")
-      expect(hand.error).to eq("error"=>"半角大文字英語のスート(H,D,S,C)と数字（1~13)で記入してください","error2" => "5番目のカードの指定文字が不正です(H)")
+      hand = Hand.new("S10 H10 D1 S2 H")
+      expect(hand.validation).to eq("半角大文字英語のスート(H,D,S,C)と数字（1~13)で記入してください。5番目のカードの指定文字が不正です(H)")
 
     end
 
     it "result_error" do
-      hand = Hand.new("H10 H10 D1 S2 H5 H2")
-      expect(hand.error).to eq({"error"=>"5つのカード指定文字を半角スペースで区切り入力してください（例）H3 S3 D4 D12 S1"})
+      hand = Hand.new("S10 H10 D1 S2 H5 H2")
+      expect(hand.number_of_cards).to eq("5つのカード指定文字を半角スペースで区切り入力してください（例）H3 S3 D4 D12 S1")
 
     end
-
-
   end
 end
 

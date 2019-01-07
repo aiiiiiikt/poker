@@ -4,7 +4,7 @@ RSpec.describe "poker", type: :request do
   context "result method" do
 
 
-    it "カードを入力したら、何らか出力されるか" do
+    it "カードを入力したら、何らか出力される" do
       first_params = { cards: ["H1 H13 H12 H11 H10", "H7 S6 C5 C4 C3", "D1 H13 H1 S1 H10"] }
 
       expect_result =
@@ -28,7 +28,7 @@ RSpec.describe "poker", type: :request do
       third_params = { cards: ["H1 H133 H12 H11 H10", "H10 S10 H11 S12 D11", "H1 H13 H12 H11 H10"] }
 
       expect_result =
-        { "result" => [{ "error" => "半角大文字英語のスート(H,D,S,C)と数字（1~13)で記入してください", "error2" => "2番目のカードの指定文字が不正です(H133)", "cards" => "H1 H133 H12 H11 H10" }, { "result" => "ツーペア", "score" => 2, "cards" => "H10 S10 H11 S12 D11", "best" => false }, { "result" => "フラッシュ", "score" => 5, "cards" => "H1 H13 H12 H11 H10", "best" => true }] }
+        { "result" => [{ "error" => "半角大文字英語のスート(H,D,S,C)と数字（1~13)で記入してください。2番目のカードの指定文字が不正です(H133)", "cards" => "H1 H133 H12 H11 H10" }, { "result" => "ツーペア", "score" => 2, "cards" => "H10 S10 H11 S12 D11", "best" => false }, { "result" => "フラッシュ", "score" => 5, "cards" => "H1 H13 H12 H11 H10", "best" => true }] }
       post "/api/poker", third_params
       body = JSON.parse(response.body)
       expect(body).to eq (expect_result)
